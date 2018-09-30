@@ -32,6 +32,8 @@
 
 -export([execute/2]).
 -export([handler_loop/4]).
+-include("log.hrl").
+%% 处理业务逻辑的回调逻辑 ， 放在最后一个中间件
 
 -record(state, {
 	env :: cowboy_middleware:env(),

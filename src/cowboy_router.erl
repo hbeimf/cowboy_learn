@@ -33,6 +33,9 @@
 -export_type([bindings/0]).
 -export_type([tokens/0]).
 
+-include("log.hrl").
+%% 处理请求与回调handler 的映射 ， 必须先于中间件 cowboy_handler 执行
+
 -type constraints() :: [{atom(), int}
 	| {atom(), function, fun ((binary()) -> true | {true, any()} | false)}].
 -export_type([constraints/0]).

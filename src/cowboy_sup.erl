@@ -25,6 +25,7 @@ start_link() ->
 -spec init([])
 	-> {ok, {{supervisor:strategy(), 10, 10}, [supervisor:child_spec()]}}.
 init([]) ->
+	% 启动cowboy_clock gen_server
 	Procs = [{cowboy_clock, {cowboy_clock, start_link, []},
 		permanent, 5000, worker, [cowboy_clock]}],
 	{ok, {{one_for_one, 10, 10}, Procs}}.

@@ -20,6 +20,7 @@
 
 -spec start(_, _) -> {ok, pid()}.
 start(_, _) ->
+	% cowboy app启动入口
 	cowboy_sup:start_link().
 
 -spec stop(_) -> ok.

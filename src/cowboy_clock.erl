@@ -85,7 +85,7 @@ handle_cast(_Msg, State) ->
 
 -spec handle_info(any(), State) -> {noreply, State} when State::#state{}.
 handle_info(update, #state{universaltime=Prev, rfc1123=B1, tref=TRef0}) ->
-	%% 收到每秒一次的计时器消息，执行时间更新，
+	%% 收到每秒一次的计时器消息，执行时间更新， 
 	%% Cancel the timer in case an external process sent an update message.
 	_ = erlang:cancel_timer(TRef0),
 	T = erlang:universaltime(),

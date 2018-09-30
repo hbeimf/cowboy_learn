@@ -62,6 +62,11 @@
 
 -spec start_link(ranch:ref(), inet:socket(), module(), opts()) -> {ok, pid()}.
 start_link(Ref, Socket, Transport, Opts) ->
+	%% 来到这里说明一个连接已经建立好了，
+	%% 这个进程包括了http协议解析的主要逻辑 ，
+	%% 先跳过http协议解析细节，直接跳转至协议解析完后的 
+	%% cowboy_protocol:onrequest/2 逻辑，
+	%% 那里才是业务回调函数调用逻辑的开始
 	Pid = spawn_link(?MODULE, init, [Ref, Socket, Transport, Opts]),
 	{ok, Pid}.
 
@@ -83,6 +88,11 @@ init(Ref, Socket, Transport, Opts) ->
 	MaxHeaders = get_value(max_headers, Opts, 100),
 	MaxKeepalive = get_value(max_keepalive, Opts, 100),
 	MaxRequestLineLength = get_value(max_request_line_length, Opts, 4096),
+	%% 中间件的回调列表 Middlewares
+	%% 从这里看中间件是有默认两个 
+	%% 如果自己定义了中间件，必须将这两个默认的中间件给带上，
+	%% 其实cowboy开发人员可以考虑将用户定义的中间件与默认的合并，
+	%% 这样就不容易在自定义中间件的时候出错了，比如忘记加上[cowboy_router, cowboy_handler]
 	Middlewares = get_value(middlewares, Opts, [cowboy_router, cowboy_handler]),
 	Env = [{listener, Ref}|get_value(env, Opts, [])],
 	OnRequest = get_value(onrequest, Opts, undefined),
@@ -397,6 +407,9 @@ parse_host(<< C, Rest/bits >>, E, Acc) ->
 		?INLINE_LOWERCASE(parse_host, Rest, E, Acc)
 	end.
 
+%% http协议解析完毕， ==========================================
+%% 这里应该就是业务逻辑的开始
+
 %% End of request parsing.
 %%
 %% We create the Req object and start handling the request.
@@ -439,6 +452,9 @@ execute(Req, State=#state{middlewares=Middlewares, env=Env}) ->
 execute(Req, State, Env, []) ->
 	next_request(Req, State, get_value(result, Env, ok));
 execute(Req, State, Env, [Middleware|Tail]) ->
+	%% 从此处的逻辑来看，中间件应该是个列表，
+	%% 说明我们可以在业务逻辑 里定义若干个中间件，
+	%%  MiddlewareList
 	case Middleware:execute(Req, Env) of
 		{ok, Req2, Env2} ->
 			execute(Req2, State, Env2, Tail);

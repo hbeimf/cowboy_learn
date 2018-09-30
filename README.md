@@ -50,8 +50,8 @@ Getting help
  *  [Commercial Support](http://ninenines.eu/support)
 
  ```
- 	make 
- 	make run 
+ 	$ make 
+ 	$ make run 
 
  	http://localhost:9991/?echo=hello
  ```

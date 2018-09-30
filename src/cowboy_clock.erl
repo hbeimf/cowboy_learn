@@ -65,6 +65,7 @@ init([]) ->
 		named_table, {read_concurrency, true}]),
 	T = erlang:universaltime(),
 	B = update_rfc1123(<<>>, undefined, T),
+	% 启动计时器， 每秒更新一次
 	TRef = erlang:send_after(1000, self(), update),
 	ets:insert(?MODULE, {rfc1123, B}),
 	{ok, #state{universaltime=T, rfc1123=B, tref=TRef}}.
@@ -84,6 +85,7 @@ handle_cast(_Msg, State) ->
 
 -spec handle_info(any(), State) -> {noreply, State} when State::#state{}.
 handle_info(update, #state{universaltime=Prev, rfc1123=B1, tref=TRef0}) ->
+	%% 收到每秒一次的计时器消息，执行时间更新，
 	%% Cancel the timer in case an external process sent an update message.
 	_ = erlang:cancel_timer(TRef0),
 	T = erlang:universaltime(),

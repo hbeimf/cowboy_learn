@@ -48,3 +48,10 @@ Getting help
  *  Official IRC Channel: #ninenines on irc.freenode.net
  *  [Mailing Lists](http://lists.ninenines.eu)
  *  [Commercial Support](http://ninenines.eu/support)
+
+ ```
+ 	make 
+ 	make run 
+
+ 	http://localhost:9991/?echo=hello
+ ```

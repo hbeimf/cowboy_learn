@@ -40,6 +40,11 @@
 	cowboy_protocol:opts()) -> {ok, pid()} | {error, any()}.
 start_http(Ref, NbAcceptors, TransOpts, ProtoOpts)
 		when is_integer(NbAcceptors), NbAcceptors > 0 ->
+	%% 进入网络库  ranch , 
+	%% 之后 ranch库会把一个连接 Socket 句柄发给 cowboy_protocol:start_link/4 模块的启动函数，
+	%% 我是怎么知道 的，我看了 ranch 的源码，这里只观看cowboy , ranch逻辑 就省了，
+	%% 想看ranch，请移步至我的 ranch_learn 项目里面很好追踪。 
+	%% 现在直接 跳 过中间环节去 cowboy_protocol:start_link/4 接着...
 	ranch:start_listener(Ref, NbAcceptors,
 		ranch_tcp, TransOpts, cowboy_protocol, ProtoOpts).
 

@@ -10,3 +10,4 @@ ebin
 logs
 relx
 test/*.beam
+erl_crash.dump

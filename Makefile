@@ -76,3 +76,7 @@ install-docs:
 	mkdir -p $(MAN_INSTALL_PATH)/man3/ $(MAN_INSTALL_PATH)/man7/
 	install -g 0 -o 0 -m 0644 doc/man3/*.gz $(MAN_INSTALL_PATH)/man3/
 	install -g 0 -o 0 -m 0644 doc/man7/*.gz $(MAN_INSTALL_PATH)/man7/
+
+
+run: 
+	erl -pa ./ebin -pa ./deps/*/ebin -s test start

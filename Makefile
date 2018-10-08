@@ -79,4 +79,5 @@ install-docs:
 
 
 run: 
+	cp ./priv ./deps/ranch/ -R
 	erl -pa ./ebin -pa ./deps/*/ebin -s test start

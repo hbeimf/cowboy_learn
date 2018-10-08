@@ -22,7 +22,10 @@ start() ->
 	%% 路由配置， 中间件啥 的都在这里配置，
 	Dispatch = cowboy_router:compile([
 		{'_', [
-			{"/", test_handler, []}
+			{"/", test_handler, []},
+			{"/ws", cowboy_static, {priv_file, ranch, "index.html"}},
+			{"/websocket", ws_handler, []},
+			{"/static/[...]", cowboy_static, {priv_dir, ranch, "static"}}
 		]}
 	]),
 
@@ -31,5 +34,7 @@ start() ->
 		{env, [{dispatch, Dispatch}]}
 	]),
 	
-	io:format("run...  http://localhost:9991/?echo=hello~n"),
+	io:format("run...\n\nhttp://localhost:9991/?echo=hello~n"),
+	io:format("http://localhost:9991/ws~n"),
+
 	ok.
